@@ -70,8 +70,11 @@ function Back({ onClick }: { onClick: () => void }) {
 }
 
 function randomCode() {
-  const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  return Array.from({ length: 5 }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join("");
+  let code = "";
+  while (code.length < 5) {
+    code += "ABCDEFGHJKLMNPQRSTUVWXYZ23456789".charAt(Math.floor(Math.random() * 32));
+  }
+  return code;
 }
 
 function DialectGame({ onBack }: { onBack: () => void }) {
