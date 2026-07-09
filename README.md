@@ -1,36 +1,41 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spire Light Dialect Game
 
-## Getting Started
+A mobile-first Danish dialect game for Spirelight.ai's KU university event.
 
-First, run the development server:
+## The two games
+
+- **Guess the dialect:** create or join a live room, hear an archival Danish dialect clip, pick among four dialects, and follow the group through eight timed rounds on your phone.
+- **Guess a student's dialect:** record one of 50 Danish sentences, explicitly consent to event-only playback, self-report your dialect, then listen to consenting peers and compare guesses without a score.
+
+The archival quiz contains 24 recordings and labels taken from the event content document in Google Drive. Wrong answers are deterministic alternatives drawn from the other represented dialects.
+
+## Local setup
 
 ```bash
+npm install
+cp .env.example .env.local
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Set these public client values in `.env.local` and in Vercel:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```text
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The Supabase schema is in `supabase/migrations`. It includes row-level security, explicit grants for the Data API, and an event-only public Storage bucket for consenting recordings.
 
-## Learn More
+## Event operations
 
-To learn more about Next.js, take a look at the following resources:
+- Test room creation, joining, playback, microphone permission, and upload on both iPhone Safari and Android Chrome before opening the stand.
+- Keep the game open only for the event window.
+- The consent copy commits Spirelight to deleting participant recordings no later than seven days after the event. Remove both the `student_clips` rows and the corresponding files in the `dialect-clips` Supabase Storage bucket. Participants may ask the stand team for earlier deletion.
+- Do not collect a full name or other personal details in the recording.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Checks
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npm run lint
+npm run build
+```
